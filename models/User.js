@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -55,5 +56,20 @@ const UserSchema = new mongoose.Schema(
     timestamps: true, // Tự động tạo createdAt và updatedAt
   }
 );
+
+// Tạo token xác thực cho người dùng
+UserSchema.methods.generateAuthToken = function () {
+  const payload = {
+    _id: this._id,
+    email: this.email,
+    name: this.name,
+    phone: this.phone,
+    role: this.role,
+  };
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || "1h",
+  });
+  return token;
+};
 
 module.exports = mongoose.model("User", UserSchema);

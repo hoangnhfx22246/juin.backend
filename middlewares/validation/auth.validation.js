@@ -1,5 +1,6 @@
 const { body } = require("express-validator");
 
+/// Middleware để xác thực dữ liệu đầu vào cho đăng ký người dùng
 const registerValidation = [
   body("email")
     .notEmpty()
@@ -37,6 +38,18 @@ const registerValidation = [
     .withMessage("Số điện thoại không hợp lệ"),
 ];
 
+// Middleware để xác thực dữ liệu đầu vào cho đăng nhập người dùng
+const loginValidation = [
+  body("email")
+    .notEmpty()
+    .withMessage("Hãy điền email")
+    .isEmail()
+    .withMessage("Hãy nhập đúng định dạng email")
+    .normalizeEmail(),
+  body("password").notEmpty().withMessage("Hãy điền mật khẩu"),
+];
+
 module.exports = {
   registerValidation,
+  loginValidation,
 };

@@ -34,3 +34,36 @@ exports.registerUser = async (req, res) => {
     return res.status(500).json({ message: "Đăng ký không thành công" });
   }
 };
+
+// Đăng nhập người dùng
+// @route POST api/auth/login
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Tìm người dùng theo email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Email không tồn tại" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password); // So sánh mật khẩu đã mã hóa với mật khẩu người dùng nhập vào
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu không đúng" });
+    }
+
+    // tạo token cho người dùng
+    const acceptToken = await user.generateAuthToken(); // Giả sử bạn đã định nghĩa phương thức này trong model User
+    return res.status(200).json({
+      token: acceptToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi đăng nhập:", error);
+    return res.status(500).json({ message: "Đăng nhập không thành công" });
+  }
+};
