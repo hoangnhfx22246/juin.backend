@@ -14,8 +14,6 @@ const generateAccessTokens = (user) => {
   const payload = {
     _id: user._id,
     email: user.email,
-    name: user.name,
-    role: user.role,
   };
   const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: process.env.EXPIRES_ACCESS_TOKEN,
@@ -28,8 +26,6 @@ const generateRefreshTokens = (user) => {
   const payload = {
     _id: user._id,
     email: user.email,
-    name: user.name,
-    role: user.role,
   };
   const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: process.env.EXPIRES_REFRESH_TOKEN,
@@ -61,6 +57,7 @@ exports.refreshToken = async (req, res) => {
         email: user.email,
         name: user.name,
         avatar: user.avatar,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -103,13 +100,14 @@ exports.registerUser = async (req, res) => {
       sameSite: "Strict",
       maxAge: Number(process.env.MAX_AGE_REFRESH_TOKEN) * 24 * 60 * 60 * 1000, // Ví dụ: 7 ngày
     });
-    const userWithoutPassword = newUser.toObject();
-    delete userWithoutPassword.password;
-    delete userWithoutPassword.role;
     return res.status(200).json({
       accessToken,
       user: {
-        ...userWithoutPassword,
+        id: newUser._id,
+        email: newUser.email,
+        name: newUser.name,
+        avatar: newUser.avatar,
+        role: newUser.role,
       },
     });
   } catch (error) {
@@ -145,13 +143,14 @@ exports.loginUser = async (req, res) => {
       maxAge: Number(process.env.MAX_AGE_REFRESH_TOKEN) * 24 * 60 * 60 * 1000, // Thời gian hết hạn của refresh token
     });
 
-    const userWithoutPassword = user.toObject();
-    delete userWithoutPassword.password;
-    delete userWithoutPassword.role;
     return res.status(200).json({
       accessToken,
       user: {
-        ...userWithoutPassword,
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        avatar: user.avatar,
+        role: user.role,
       },
     });
   } catch (error) {

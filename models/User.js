@@ -16,10 +16,12 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     avatar: {
-      type: String,
+      url: { type: String, default: "" }, // link ảnh cloudinary
+      public_id: { type: String, default: "" }, // id của ảnh cloudinary
     },
     sex: {
-      type: Boolean,
+      type: String,
+      enum: ["Nam", "Nữ"],
     },
     birthday: {
       type: Date,

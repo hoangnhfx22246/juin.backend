@@ -42,13 +42,14 @@ router.post("/logout", logoutUser);
 router.post(
   "/refresh-token",
   csrfProtection,
-  refreshTokenLimiter,
+  // refreshTokenLimiter,
   refreshToken
 ); // Đường dẫn cho việc làm mới token
 
 // @route POST api/auth/forgot-password
 router.post(
   "/forgot-password",
+  refreshTokenLimiter,
   forgotPasswordValidation,
   validateRequest,
   forgotPassword
