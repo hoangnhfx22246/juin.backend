@@ -18,8 +18,8 @@ const categorySchema = new Schema(
       required: true,
     },
     image: {
-      type: String,
-      required: true,
+      url: { type: String, default: "" }, // link ảnh cloudinary
+      public_id: { type: String, default: "" }, // id của ảnh cloudinary
     },
     parentId: {
       type: mongoose.Schema.Types.ObjectId,

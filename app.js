@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8000;
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend domain (Vite)
+    origin: ["http://localhost:5173", "http://localhost:5174"], // frontend domain (Vite)
     credentials: true, // Cho phép gửi Cookie
   })
 );

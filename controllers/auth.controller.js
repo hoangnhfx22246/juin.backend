@@ -120,13 +120,23 @@ exports.registerUser = async (req, res) => {
 // @route POST api/auth/login
 exports.loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { type } = req.query; // lấy type từ query string
 
+    const { email, password } = req.body;
     // Tìm người dùng theo email
     const user = await User.findOne({ email });
     if (!user) {
       return conflictErrorResponse(res, "email", "Email đã tồn tại");
     }
+
+    if (type === "admin" && user.role === "user") {
+      return conflictErrorResponse(
+        res,
+        "email",
+        "Bạn không có quyền đăng nhập vào Admin"
+      );
+    }
+
     const isMatch = await bcrypt.compare(password, user.password); // So sánh mật khẩu đã mã hóa với mật khẩu người dùng nhập vào
     if (!isMatch) {
       return conflictErrorResponse(res, "password", "Mật khẩu không đúng");
