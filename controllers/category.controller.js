@@ -35,7 +35,7 @@ exports.getCategories = async (req, res) => {
       { path: "parentId", select: "name" },
       page,
       limit,
-      sort // bạn quên truyền `sort` ở đây
+      sort
     );
 
     // Trả dữ liệu
@@ -186,11 +186,9 @@ exports.deleteCategories = async (req, res) => {
     // Kiểm tra xem category có danh mục con hay không
     const subCategories = await Category.find({ parentId: id });
     if (subCategories.length > 0) {
-      return res
-        .status(400)
-        .json({
-          message: "Không thể xóa danh mục này vì đang có danh mục con",
-        });
+      return res.status(400).json({
+        message: "Không thể xóa danh mục này vì đang có danh mục con",
+      });
     } // Nếu có danh mục con, trả về lỗi
 
     // Xoá ảnh trên Cloudinary nếu có

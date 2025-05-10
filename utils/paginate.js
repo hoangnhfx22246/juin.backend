@@ -30,10 +30,10 @@ async function paginate(
   return {
     data,
     pagination: {
-      currentPage: page,
+      page: page,
       totalPages: Math.ceil(totalItems / limit),
-      totalItems,
-      itemsPerPage: limit,
+      total: totalItems,
+      limit: limit,
     },
   };
 }
